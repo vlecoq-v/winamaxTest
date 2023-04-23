@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import socketIOClient, { Socket } from 'socket.io-client';
 import './App.css';
 
 
@@ -6,26 +7,38 @@ function App() {
   const [count, setCount] = useState(0);
   const [processingTime, setProcessingTime] = useState(0);
 
+
   function sendRequest(count) {
-    const socket = new WebSocket("wss://example.com/api");
+    const startDate = Date.now();
 
-    const startTime = Date.now();
-    let processedCount = 0;
+    console.log('send request')
+    socket.emit('enqueue', {count: count, mid: 1})
 
-    socket.onopen = () => {
-      socket.send(JSON.stringify({ count: count }));
-    };
+    socket.on('enqueueDone', (req) => {
+      console.log(`enqueue Done received with ${JSON.stringify(req)}`)
+      console.log(`${req.count} et ${count}`)
+      if (req.count && req.count === count) {
+        const endDate = new Date()
+        const dateDiff = endDate - startDate
+        const seconds = dateDiff / 1000
+        console.log(seconds)
 
-    socket.onmessage = (event) => {
-      processedCount++;
-      if (processedCount === count) {
-        const endTime = Date.now();
-        const timeDiff = (endTime - startTime) / 1000;
-        setProcessingTime(timeDiff.toFixed(2));
-        socket.close();
+        setProcessingTime(seconds.toFixed(3))
       }
-    };
+    })
   }
+
+  const ENDPOINT = 'http://localhost:3000/';
+  const socket = socketIOClient(ENDPOINT);
+
+  // useEffect(() => {
+
+
+  // })
+  // socket.on('connect', () => {
+  //   socket.emit('hello', {"test": "ok"})
+  //   console.log('connected.')
+  // });
 
   return (
     <div className="App">
