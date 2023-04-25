@@ -30,9 +30,6 @@ const startServer = async () => {
   app.use('/processed', processedRouter)
 
   io.sockets.on('connect', socket => {
-    log.info(`I have a connection ${socket.id}`)
-    console.log(`state = ${socketClients}`)
-
     socketClients[socket.id] = socket
     enqueuController(socket)
 

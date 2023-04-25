@@ -12,8 +12,8 @@ function waitRandom() {
 
 const API_URL = process.env.API_URL
 
-messageQueue.process(async job => {
-  // console.log(`job = ${JSON.stringify(job)}`)
+// waits for queue element to process the job validating the format, waiting and sending a post request to the api
+messageQueue.process(job => {
   const message = new Message(job.data.cid, job.data.mid, job.data.idx)
   message.validate()
   waitRandom()

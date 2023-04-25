@@ -13,6 +13,7 @@ function App() {
   const [mid, setMid] = useState(1)
   let count = 0
 
+  // use effect for time elapsed
   useEffect(() => {
     const interval = setInterval(() => {
       if (working) {
@@ -22,34 +23,23 @@ function App() {
 
     return () => clearInterval(interval)
   }, [working])
-  console.log('mounting component')
 
+  //use effect comparing processed count to awaited total to set work in progress (working variable)
   useEffect(()=>{
-    console.log("use Effect")
-    socket.on('connect', () => {
-      console.log("Connected")
-    })
-
     socket.on(EVENT_PROCESSED, (req) => {
-      // console.log(`enqueue Done received with ${JSON.stringify(req)}`)
-      // console.log(`${req.result.idx} et ${count}`)
       count += 1
       if (req.result.idx) {
         if (count === total - 1) { 
           setWorking(false)
         }
       }
-      console.log(`received ${req.result.idx}`)
     })
     return () => socket.off(EVENT_PROCESSED)
   },[total])
 
 
   function sendRequest(jobNumber, mid) {
-    // const startDate = Date.now();
     count = 0
-
-    console.log('send request')
     socket.emit('enqueue', {count: jobNumber, mid: mid})
   }
 

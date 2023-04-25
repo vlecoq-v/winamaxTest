@@ -9,4 +9,4 @@ const options = commander.opts()
 
 exec(`env instances=${options.instances} make down docker.build`)
 
-console.log('docker started you can monitor them with make docker.logs')
+console.log('docker startintg... you can monitor them with make docker.logs')
