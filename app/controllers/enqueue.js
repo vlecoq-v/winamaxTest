@@ -1,5 +1,5 @@
-import { messageQueue } from '../config/queue.config.js'
-import { Message } from '../models/message.js'
+import { messageQueue } from '../../common/queue/queue.config.js'
+import { Message } from '../../common/queue/message.js'
 import { log } from '../utils/logger.js'
 
 export const enqueuController = (socket) => {
@@ -10,7 +10,6 @@ export const enqueuController = (socket) => {
     }
     const socketId = 'randomId'
 
-    log.info(socket)
     for (let step = 0; step < Number(req.count); step++) {
       messageQueue.add(new Message(socketId, req.mid, step))
     }

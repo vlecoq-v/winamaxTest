@@ -1,13 +1,11 @@
 FROM node:14
 
-WORKDIR /app
+WORKDIR /winamaxTest
 
+COPY ./common ./common
 COPY app/package*.json ./
 
 RUN npm install
-
-COPY ./app .
+# COPY ./app ./app
 
 EXPOSE 3000
-
-CMD [ "npm", "run", "dev" ]

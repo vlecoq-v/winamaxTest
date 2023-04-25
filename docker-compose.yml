@@ -6,12 +6,23 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./app:/app
+      - ./app:/winamaxTest/app
     env_file:
       - app/env/.env
     depends_on:
       - redis
     command: npm run dev
+  worker:
+    build: 
+      context: .
+      dockerfile: ./dockerfile-worker
+    volumes:
+      - ./worker:/winamaxTest/app
+    env_file:
+      - ./worker/env/.env
+    depends_on:
+      - redis
+      - app
   redis:
     image: redis:latest
     ports:

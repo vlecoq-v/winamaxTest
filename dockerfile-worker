@@ -1,0 +1,8 @@
+FROM node:14
+
+WORKDIR /winamaxTest
+
+COPY ./common ./common
+COPY worker/package*.json ./
+
+RUN npm install
