@@ -2,9 +2,12 @@ version: "3.9"
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: ./dockerfile-app
     ports:
       - "3000:3000"
+      - "80:80"
     volumes:
       - ./app:/winamaxTest/app
     env_file:
@@ -16,13 +19,17 @@ services:
     build: 
       context: .
       dockerfile: ./dockerfile-worker
-    volumes:
-      - ./worker:/winamaxTest/app
     env_file:
       - ./worker/env/.env
+    volumes:
+      - ./worker:/winamaxTest/worker
     depends_on:
-      - redis
       - app
+    command: npm run dev
+    deploy:
+      mode: replicated
+      replicas: 1
+
   redis:
     image: redis:latest
     ports:

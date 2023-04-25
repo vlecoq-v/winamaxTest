@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import socketIOClient, { Socket } from 'socket.io-client';
+import socketIOClient from 'socket.io-client';
 import './App.css';
 
-const ENDPOINT = 'http://localhost:3000/'
+const ENDPOINT = 'http://localhost:80/'
 const socket = socketIOClient(ENDPOINT)
 const EVENT_PROCESSED = 'processed'
 
 function App() {
   const [total, setTotal] = useState(0)
-  const [processingTime, setProcessingTime] = useState('waiting')
-  const [done, setDone] = useState(true)
+  const [processingTime, setProcessingTime] = useState(0)
+  const [working, setWorking] = useState(false)
   const [mid, setMid] = useState(1)
   let count = 0
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!done) {
+      if (working) {
         setProcessingTime(prevElapsedTime => prevElapsedTime + 1)
       }
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [done])
+  }, [working])
   console.log('mounting component')
 
   useEffect(()=>{
@@ -36,10 +36,10 @@ function App() {
       count += 1
       if (req.result.idx) {
         if (count === total - 1) { 
-          setDone(true)
-          setProcessingTime(`finished in ${processingTime} seconds`)
+          setWorking(false)
         }
       }
+      console.log(`received ${req.result.idx}`)
     })
     return () => socket.off(EVENT_PROCESSED)
   },[total])
@@ -66,12 +66,15 @@ function App() {
         }}
       />
       <button onClick={() => {
-          setDone(false)
+          // reset state variables for display
+          setWorking(true)
           setProcessingTime(0)
+
+          // send request with new information
           setMid(mid + 1)
           sendRequest(total, mid)
         }}>Send</button>
-      <div>Temps de traitement: {processingTime} {(done === false) ? 'secondes' : ''}</div>
+      <div>Temps de traitement: {processingTime} {(working === true) ? 'secondes' : ''}</div>
     </div>
   );
 }

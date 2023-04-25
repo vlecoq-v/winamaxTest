@@ -2,7 +2,13 @@ FROM node:14
 
 WORKDIR /winamaxTest
 
+RUN mkdir worker
+
 COPY ./common ./common
-COPY worker/package*.json ./
+COPY worker/package*.json ./worker/
+
+WORKDIR /winamaxTest/worker
 
 RUN npm install
+
+# COPY ./worker ./

@@ -8,12 +8,11 @@ export const enqueuController = (socket) => {
     if (req.count == null || req.mid == null) {
       return
     }
-    const socketId = 'randomId'
 
     for (let step = 0; step < Number(req.count); step++) {
-      messageQueue.add(new Message(socketId, req.mid, step))
+      messageQueue.add(new Message(socket.id, req.mid, step))
     }
-    log.info(`added ${req.count} messages to the queue with id: ${socketId}`)
+    log.info(`added ${req.count} messages to the queue with id: ${socket.id}`)
     socket.emit('enqueueDone', { count: req.count })
   })
 }
