@@ -28,7 +28,7 @@ services:
     command: npm run dev
     deploy:
       mode: replicated
-      replicas: ${instances:-1}
+      replicas: ${instances:-5}
 
   redis:
     image: redis:latest

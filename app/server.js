@@ -35,7 +35,6 @@ const startServer = async () => {
 
     socket.on('disconnect', _ => {
       console.log(`disconect ${socket.id}`)
-      console.log(`state = ${socketClients}`)
       delete socketClients[socket.id]
     })
   })
